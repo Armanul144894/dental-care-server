@@ -137,21 +137,21 @@ async function run() {
       res.send(result);
     });
 
-    // app.get("/bookings", async (req, res) => {
-    //   const email = req.query.email;
-    //   const decodedEmail = req.decoded.email;
-    //   if (email !== decodedEmail) {
-    //     return res.status(403).send({ message: "forbidden access" });
-    //   }
-    //   const query = { email: email };
-    //   const bookings = await bookingsCollection.findOne(query);
-    //   res.send(bookings);
-    // });
-    app.get("/bookings", async (req, res) => {
-      const query = {};
-      const bookings = await bookingsCollection.find(query).toArray();
+    app.get("/bookings",verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+      const query = { email: email };
+      const bookings = await bookingsCollection.findOne(query);
       res.send(bookings);
     });
+    // app.get("/bookings", async (req, res) => {
+    //   const query = {};
+    //   const bookings = await bookingsCollection.find(query).toArray();
+    //   res.send(bookings);
+    // });
 
     app.get("/bookings/:id", async (req, res) => {
       const id = req.params.id;
